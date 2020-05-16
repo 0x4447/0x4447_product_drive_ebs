@@ -3,6 +3,6 @@
 		"Description": "Select the volume type that you need. Find out more here: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volume-types.html",
 		"Type": "String",
 		"AllowedValues": ["gp2", "io1", "sc1", "st1", "standard"],
-		"Default": "st1"
+		"Default": "sc1"
 	}
 }
