@@ -3,19 +3,55 @@
             "ParameterGroups": [
                 {
                     "Label": {
+                        "default": "Location"
+                    },
+                    "Parameters": [
+                        "AZParam"
+                    ]
+                },
+                {
+                    "Label": {
                         "default": "Basic"
                     },
                     "Parameters": [
-                        "CodePipelineArtifactsParam",
-                        "GitHubTokenParam",
-                        "StageParam"
+                        "VolumeNameParam",
+                        "VolumeTypeParam",
+                        "SizeParam"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "For io1 type Volume"
+                    },
+                    "Parameters": [
+                        "IOPSParam"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "For Nitro Instances"
+                    },
+                    "Parameters": [
+                        "MultiAttachParam"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "For Nitro Instances"
+                    },
+                    "Parameters": [
+                        "MultiAttachParam"
                     ]
                 }
             ],
             "ParameterLabels": {
-                "CodePipelineArtifactsParam": { "default": "CodePipeline Artifacts Bucket" },
-                "GitHubTokenParam": { "default": "GitHub Token" },
-                "StageParam": { "default": "Stage" }
+                "AZParam": { "default": "AZ where to deploy the EBS" },
+                "IOPSParam": { "default": "IOPS if io1" },
+                "MultiAttachParam": { "default": "Multi Attach" },
+                "SizeParam": { "default": "How Much Space" },
+                "SnapshotIdParam": { "default": "EBS Snapshot ID" },
+                "VolumeNameParam": { "default": "Volume Name" },
+                "VolumeTypeParam": { "default": "Volume Type" }
             }
         }
 }
