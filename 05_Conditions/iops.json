@@ -1,0 +1,3 @@
+{
+	"IopsCondition": { "Fn::Equals": [ {"Ref": "IOPSParam"}, "0"] }
+}

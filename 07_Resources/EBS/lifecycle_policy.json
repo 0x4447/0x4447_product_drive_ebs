@@ -1,0 +1,33 @@
+{
+    "EBSLifecyclePolicy": {
+        "Type": "AWS::DLM::LifecyclePolicy",
+        "Properties": {
+            "Description": "7 days",
+            "ExecutionRoleArn": {"Fn::GetAtt" : ["EBSRole", "Arn"] },
+            "State": "ENABLED",
+            "PolicyDetails": {
+                "ResourceTypes": [ "VOLUME" ],
+                "TargetTags": [
+                    {
+                        "Key": "lifecycle_policy",
+                        "Value": { "Ref": "VolumeNameParam" }
+                    }
+                ],
+                "Schedules": [
+                    {
+                        "CopyTags": true,
+                        "CreateRule": {
+                            "Interval": 24,
+                            "IntervalUnit": "HOURS"
+                        },
+                        "Name": "7 Dasy",
+                        "RetainRule": {
+                            "Count": 7,
+                            "IntervalUnit": "DAYS"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

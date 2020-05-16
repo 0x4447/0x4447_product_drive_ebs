@@ -1,0 +1,6 @@
+{
+	"SnapshotIdParam": {
+		"Description": "OPTIONAL: only when you want to use a Snapshot that you have to restore data.",
+		"Type": "String"
+	}
+}

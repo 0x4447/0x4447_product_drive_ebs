@@ -1,0 +1,7 @@
+{
+	"SizeParam": {
+		"Description": "The size of the EBS volume in GiBs :: 1-16,384 for gp2, 4-16,384 for io1, 500-16,384 for st1, 500-16,384 for sc1, and 1-1,024 for standard",
+		"Type": "Number",
+		"Default": "10"
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"VolumeNameParam": {
+		"Description": "Name of the volume.",
+		"Type": "String",
+		"MinLength": 1
+	}
+}

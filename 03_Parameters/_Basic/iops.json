@@ -1,0 +1,9 @@
+{
+	"IOPSParam": {
+		"Description": "IOPS values. It applies only if you select volume tye of: io1",
+		"Type": "Number",
+		"Default": 0,
+		"MinValue": 0,
+		"MaxValue": 64000
+	}
+}

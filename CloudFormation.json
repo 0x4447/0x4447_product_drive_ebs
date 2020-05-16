@@ -1,0 +1,231 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Describe me!",
+	"Metadata": {
+		"AWS::CloudFormation::Interface": {
+			"ParameterGroups": [
+				{
+					"Label": {
+						"default": "Basic"
+					},
+					"Parameters": [
+						"CodePipelineArtifactsParam",
+						"GitHubTokenParam",
+						"StageParam"
+					]
+				}
+			],
+			"ParameterLabels": {
+				"CodePipelineArtifactsParam": {
+					"default": "CodePipeline Artifacts Bucket"
+				},
+				"GitHubTokenParam": {
+					"default": "GitHub Token"
+				},
+				"StageParam": {
+					"default": "Stage"
+				}
+			}
+		}
+	},
+	"Parameters": {
+		"AZParam": {
+			"Description": "In which Availalbilty Zone should this EBS be deployed in.",
+			"Type": "AWS::EC2::AvailabilityZone::Name"
+		},
+		"IOPSParam": {
+			"Description": "IOPS values. It applies only if you select volume tye of: io1",
+			"Type": "Number",
+			"Default": 0,
+			"MinValue": 0,
+			"MaxValue": 64000
+		},
+		"MultiAttachParam": {
+			"Description": "Do you want to allow thie EBS to be mounted by multiple instances (only supported by Nitro instances)",
+			"Type": "String",
+			"AllowedValues": [
+				"true",
+				"false"
+			],
+			"Default": "false"
+		},
+		"SizeParam": {
+			"Description": "The size of the EBS volume in GiBs :: 1-16,384 for gp2, 4-16,384 for io1, 500-16,384 for st1, 500-16,384 for sc1, and 1-1,024 for standard",
+			"Type": "Number",
+			"Default": "10"
+		},
+		"SnapshotIdParam": {
+			"Description": "OPTIONAL: only when you want to use a Snapshot that you have to restore data.",
+			"Type": "String"
+		},
+		"VolumeTypeParam": {
+			"Description": "Select the volume type that you need. Find out more here: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volume-types.html",
+			"Type": "String",
+			"AllowedValues": [
+				"gp2",
+				"io1",
+				"sc1",
+				"st1",
+				"standard"
+			],
+			"Default": "st1"
+		},
+		"VolumeNameParam": {
+			"Description": "Name of the volume.",
+			"Type": "String",
+			"MinLength": 1
+		}
+	},
+	"Conditions": {
+		"IopsCondition": {
+			"Fn::Equals": [
+				{
+					"Ref": "IOPSParam"
+				},
+				"0"
+			]
+		}
+	},
+	"Resources": {
+		"EBS": {
+			"Type": "AWS::EC2::Volume",
+			"Properties": {
+				"AvailabilityZone": {
+					"Ref": "AZParam"
+				},
+				"Iops": {
+					"Fn::If": [
+						"IopsCondition",
+						{
+							"Ref": "AWS::NoValue"
+						},
+						{
+							"Ref": "IOPSParam"
+						}
+					]
+				},
+				"MultiAttachEnabled": {
+					"Ref": "MultiAttachParam"
+				},
+				"Size": {
+					"Ref": "SizeParam"
+				},
+				"SnapshotId": {
+					"Ref": "SnapshotIdParam"
+				},
+				"VolumeType": {
+					"Ref": "VolumeTypeParam"
+				},
+				"Tags": [
+					{
+						"Key": "Name",
+						"Value": {
+							"Ref": "VolumeNameParam"
+						}
+					},
+					{
+						"Key": "lifecycle_policy",
+						"Value": {
+							"Ref": "VolumeNameParam"
+						}
+					},
+					{
+						"Key": "Author",
+						"Value": "0x4447 LLC"
+					},
+					{
+						"Key": "Info",
+						"Value": "https://0x4447.com"
+					}
+				]
+			}
+		},
+		"EBSLifecyclePolicy": {
+			"Type": "AWS::DLM::LifecyclePolicy",
+			"Properties": {
+				"Description": "7 days",
+				"ExecutionRoleArn": {
+					"Fn::GetAtt": [
+						"EBSRole",
+						"Arn"
+					]
+				},
+				"State": "ENABLED",
+				"PolicyDetails": {
+					"ResourceTypes": [
+						"VOLUME"
+					],
+					"TargetTags": [
+						{
+							"Key": "lifecycle_policy",
+							"Value": {
+								"Ref": "VolumeNameParam"
+							}
+						}
+					],
+					"Schedules": [
+						{
+							"CopyTags": true,
+							"CreateRule": {
+								"Interval": 24,
+								"IntervalUnit": "HOURS"
+							},
+							"Name": "7 Dasy",
+							"RetainRule": {
+								"Count": 7,
+								"IntervalUnit": "DAYS"
+							}
+						}
+					]
+				}
+			}
+		},
+		"EBSRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": "ebs",
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": "dlm.amazonaws.com"
+							},
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+				"Policies": [
+					{
+						"PolicyName": "ebs",
+						"PolicyDocument": {
+							"Version": "2012-10-17",
+							"Statement": [
+								{
+									"Effect": "Allow",
+									"Action": [
+										"ec2:CreateSnapshot",
+										"ec2:CreateSnapshots",
+										"ec2:DeleteSnapshot",
+										"ec2:DescribeVolumes",
+										"ec2:DescribeInstances",
+										"ec2:DescribeSnapshots"
+									],
+									"Resource": "*"
+								},
+								{
+									"Effect": "Allow",
+									"Action": [
+										"ec2:CreateTags"
+									],
+									"Resource": "arn:aws:ec2:*::snapshot/*"
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}

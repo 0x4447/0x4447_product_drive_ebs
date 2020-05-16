@@ -1,0 +1,8 @@
+{
+	"MultiAttachParam": {
+		"Description": "Do you want to allow thie EBS to be mounted by multiple instances (only supported by Nitro instances)",
+		"Type": "String",
+		"AllowedValues": ["true", "false"],
+		"Default": "false"
+	}
+}
