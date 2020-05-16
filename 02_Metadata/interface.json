@@ -13,6 +13,7 @@
                 },
                 {
                     "Label": {
+                        "default": "Location"
                     },
                     "Parameters": [
                         "AZParam"
