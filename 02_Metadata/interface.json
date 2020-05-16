@@ -3,20 +3,19 @@
             "ParameterGroups": [
                 {
                     "Label": {
-                        "default": "Location"
-                    },
-                    "Parameters": [
-                        "AZParam"
-                    ]
-                },
-                {
-                    "Label": {
                         "default": "Basic"
                     },
                     "Parameters": [
                         "VolumeNameParam",
                         "VolumeTypeParam",
                         "SizeParam"
+                    ]
+                },
+                {
+                    "Label": {
+                    },
+                    "Parameters": [
+                        "AZParam"
                     ]
                 },
                 {
@@ -37,10 +36,10 @@
                 },
                 {
                     "Label": {
-                        "default": "For Nitro Instances"
+                        "default": "Recovery"
                     },
                     "Parameters": [
-                        "MultiAttachParam"
+                        "SnapshotIdParam"
                     ]
                 }
             ],
