@@ -2,7 +2,7 @@
 	"EBSRole": {
 		"Type": "AWS::IAM::Role",
 		"Properties": {
-			"RoleName": "ebs",
+			"RoleName": { "Fn::Sub": "0x4447_ebs_${VolumeNameParam}" },
 			"AssumeRolePolicyDocument": {
 				"Version": "2012-10-17",
 				"Statement": [
